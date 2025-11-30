@@ -7,21 +7,16 @@ import {
   FileText,
   MessageCircle,
   Search,
-  ChevronDown,
-  ChevronRight,
   LogOut,
   Settings,
   Award,
   TrendingUp,
   Calendar,
-  AlertCircle,
   Phone,
   Mail,
-  MapPin,
-  Star,
-  Info
+  MapPin
 } from 'lucide-react';
-import { collection, getDocs, orderBy, query, limit } from 'firebase/firestore';
+import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 
 const navigation = [
@@ -32,94 +27,239 @@ const navigation = [
   { id: 'contacts', label: 'Contacts', icon: MessageCircle }
 ];
 
-const customerMenu = [
-  { id: 'customers-current', label: 'Current' },
-  { id: 'services', label: 'Services' },
-  { id: 'customers-new', label: 'New' },
-  { id: 'customers-negotiating', label: 'Negotiating' }
-];
-
+/* ABOUT US: officers shown on About page */
 const teamMembers = [
   {
     name: 'John Paul Nob',
     role: 'President',
     photo: '/images/nobpfp.jpg',
     bio1:
-      'As the president of the organization, John Paul embodies leadership, dedication, and resilience. He believes in empowering every member to grow not just as a leader, but also as an individual with purpose.',
+      'Responsible for overseeing the overall direction of the organization and managing major decisions.',
     bio2:
-      'Guided by vision and teamwork, he continuously inspires the group to strive for excellence, build unity, and create meaningful impact within the student community.'
+      'Leads strategic planning and represents the group in official functions and collaborations.'
   },
   {
     name: 'Christine Marie Amarille',
     role: 'Vice President',
-    photo: '/images/karla.jpg',
+    photo: '/images/AMARILLEE.jpg',
     bio1:
-      'Christine supports the organization with passion and heart. As Vice President, she champions collaboration and makes sure every leader’s voice is heard and valued.',
+      'Assists in coordinating internal operations and supports the president in administrative duties.',
     bio2:
-      'She believes that success comes from working together and lifting one another up, creating an environment where members feel inspired to contribute and lead with confidence.'
+      'Oversees department collaboration and helps facilitate program implementation.'
   },
   {
     name: 'Glavine Layo',
     role: 'Secretary',
-    photo: '/images/julienne.jpg',
-    bio1: 'Passionate about student leadership and organizational management.',
-    bio2: 'Helps coordinate events and documentation for the organization.'
+    photo: '/images/LAYO.jpg',
+    bio1:
+      'Handles official documentation, minutes, and administrative communication within the organization.',
+    bio2:
+      'Ensures organized record-keeping and supports coordination of scheduled activities.'
   },
   {
-    name: 'Kristine Baygan',
+    name: 'Mary Angeli Talian',
     role: 'Treasurer',
-    photo: '/images/kristine.jpg',
-    bio1: 'Manages the organization’s funds and financial reports.',
-    bio2: 'Ensures transparent and organized financial tracking.'
+    photo: '/images/TALIAN.png',
+    bio1:
+      'Manages organizational funds and secures accurate records of income and expenses.',
+    bio2:
+      'Prepares financial reports and assists in planning budget allocation.'
   },
   {
-    name: 'Christine Amarille',
-    role: 'auditor',
-    photo: '/images/christine.jpg',
-    bio1: 'Oversees auditing and compliance within the organization.',
-    bio2: 'Works closely with officers for accurate records.'
+    name: 'Nadjah D. Dimaporo',
+    role: 'Budget and Finance Head',
+    photo: '/images/DIMAPORO.jpeg',
+    bio1:
+      'Oversees budgeting activities and monitors financial transactions of the organization.',
+    bio2:
+      'Coordinates with officers to align financial planning with internal programs.'
   },
   {
-    name: 'Sample Member',
-    role: 'PRO',
-    photo: '/images/sample.jpg',
-    bio1: 'Handles public relations and announcements.',
-    bio2: 'Connects the organization with the student community.'
+    name: 'Bae Fatma Razzia D. Tamano',
+    role: 'Charter Commissioner',
+    photo: '/images/TAMANO.jpg',
+    bio1:
+      'Ensures compliance with charter guidelines and monitors alignment with organizational policies.',
+    bio2:
+      'Handles documentation for membership regulations and organizational structure.'
   },
   {
-    name: 'Events Coordinator',
-    role: 'Events Head',
-    photo: '/images/events.jpg',
-    bio1: 'Leads the planning and execution of organizational events and activities.',
-    bio2: 'Ensures every event is well-organized, engaging, and aligned with the group’s goals.'
+    name: 'Raj Rhylle S. Flores',
+    role: 'DEM Head',
+    photo: '/images/FLORES.jpg',
+    bio1:
+      'Leads development, engagement, and monitoring initiatives for organizational progress.',
+    bio2:
+      'Coordinates evaluation of activities and supports member performance tracking.'
   },
   {
-    name: 'Membership Officer',
-    role: 'Member Relations',
-    photo: '/images/membership.jpg',
-    bio1: 'Focuses on member engagement and onboarding new students into the organization.',
-    bio2: 'Supports members by listening to concerns and helping them stay active and involved.'
+    name: 'Kristine Jean P. Baygan',
+    role: 'DSEEA Head',
+    photo: '/images/BAYGAN.jpeg',
+    bio1:
+      'Manages educational and engagement-related programs for members.',
+    bio2:
+      'Implements development activities and assists in coordinating academic-support initiatives.'
   },
   {
-    name: 'Documentation Officer',
-    role: 'Documentation',
-    photo: '/images/documentation.jpg',
-    bio1: 'Keeps records of meetings, events, and important organizational milestones.',
-    bio2: 'Helps preserve the history and achievements of the organization through proper documentation.'
+    name: 'Karla Mae G. Alo-ot',
+    role: 'Layout Artist',
+    photo: '/images/KARLA.jpg',
+    bio1:
+      'Creates visual materials for official announcements and branding content.',
+    bio2:
+      'Handles layout and formatting for promotional outputs and digital communication.'
+  },
+  {
+    name: 'Julienne Amber M. Dayaday',
+    role: 'Staff',
+    photo: '/images/DAYADAY.jpeg',
+    bio1:
+      'Assists with logistical requirements needed for organizational events.',
+    bio2:
+      'Helps in coordination and preparation of venue, materials, and technical setup.'
+  },
+  {
+    name: 'Gail Leanne N. Loking',
+    role: 'Staff',
+    photo: '/images/LOKING.png',
+    bio1:
+      'Supports content preparation and assists with event production materials.',
+    bio2:
+      'Helps implement tasks assigned during coordination and execution activities.'
+  },
+  {
+    name: 'Jeremy A. Barcos',
+    role: 'Staff',
+    photo: '/images/JEREMMY.jpg',
+    bio1:
+      'Provides assistance during operational and outreach-related program activities.',
+    bio2:
+      'Helps facilitate resource handling and supports event coordination requirements.'
+  }
+];
+
+/* SERVICES: same structure, but independent so you can edit roles/photos/descriptions just for Services */
+const serviceMembers = [
+  {
+    name: 'John Paul Nob',
+    role: 'President',
+    photo: '/images/nobpfp.jpg',
+    bio1:
+      'Responsible for overseeing the overall direction of the organization and managing major decisions.',
+    bio2:
+      'Leads strategic planning and represents the group in official functions and collaborations.'
+  },
+  {
+    name: 'Christine Marie Amarille',
+    role: 'Vice President',
+    photo: '/images/AMARILLEE.jpg',
+    bio1:
+      'Assists in coordinating internal operations and supports the president in administrative duties.',
+    bio2:
+      'Oversees department collaboration and helps facilitate program implementation.'
+  },
+  {
+    name: 'Glavine Layo',
+    role: 'Secretary',
+    photo: '/images/LAYO.jpg',
+    bio1:
+      'Handles official documentation, minutes, and administrative communication within the organization.',
+    bio2:
+      'Ensures organized record-keeping and supports coordination of scheduled activities.'
+  },
+  {
+    name: 'Mary Angeli Talian',
+    role: 'Treasurer',
+    photo: '/images/TALIAN.png',
+    bio1:
+      'Manages organizational funds and secures accurate records of income and expenses.',
+    bio2:
+      'Prepares financial reports and assists in planning budget allocation.'
+  },
+  {
+    name: 'Nadjah D. Dimaporo',
+    role: 'Budget and Finance Head',
+    photo: '/images/DIMAPORO.jpeg',
+    bio1:
+      'Oversees budgeting activities and monitors financial transactions of the organization.',
+    bio2:
+      'Coordinates with officers to align financial planning with internal programs.'
+  },
+  {
+    name: 'Bae Fatma Razzia D. Tamano',
+    role: 'Charter Commissioner',
+    photo: '/images/TAMANO.jpg',
+    bio1:
+      'Ensures compliance with charter guidelines and monitors alignment with organizational policies.',
+    bio2:
+      'Handles documentation for membership regulations and organizational structure.'
+  },
+  {
+    name: 'Raj Rhylle S. Flores',
+    role: 'DEM Head',
+    photo: '/images/FLORES.jpg',
+    bio1:
+      'Leads development, engagement, and monitoring initiatives for organizational progress.',
+    bio2:
+      'Coordinates evaluation of activities and supports member performance tracking.'
+  },
+  {
+    name: 'Kristine Jean P. Baygan',
+    role: 'DSEEA Head',
+    photo: '/images/BAYGAN.jpeg',
+    bio1:
+      'Manages educational and engagement-related programs for members.',
+    bio2:
+      'Implements development activities and assists in coordinating academic-support initiatives.'
+  },
+  {
+    name: 'Karla Mae G. Alo-ot',
+    role: 'Layout Artist',
+    photo: '/images/KARLA.jpg',
+    bio1:
+      'Creates visual materials for official announcements and branding content.',
+    bio2:
+      'Handles layout and formatting for promotional outputs and digital communication.'
+  },
+  {
+    name: 'Julienne Amber M. Dayaday',
+    role: 'Staff',
+    photo: '/images/DAYADAY.jpeg',
+    bio1:
+      'Assists with logistical requirements needed for organizational events.',
+    bio2:
+      'Helps in coordination and preparation of venue, materials, and technical setup.'
+  },
+  {
+    name: 'Gail Leanne N. Loking',
+    role: 'Staff',
+    photo: '/images/LOKING.png',
+    bio1:
+      'Supports content preparation and assists with event production materials.',
+    bio2:
+      'Helps implement tasks assigned during coordination and execution activities.'
+  },
+  {
+    name: 'Jeremy A. Barcos',
+    role: 'Staff',
+    photo: '/images/JEREMMY.jpg',
+    bio1:
+      'Provides assistance during operational and outreach-related program activities.',
+    bio2:
+      'Helps facilitate resource handling and supports event coordination requirements.'
   }
 ];
 
 const Dashboard = () => {
   const { currentUser, userRole, logout } = useAuth();
   const [selectedSection, setSelectedSection] = useState('home');
-  const [customersOpen, setCustomersOpen] = useState(true);
   const [stats, setStats] = useState({
     totalMembers: 0,
     activeMembers: 0,
     pendingTasks: 0,
     completedTasks: 0
   });
-  const [recentActivities, setRecentActivities] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [profileImage, setProfileImage] = useState(() => {
@@ -134,24 +274,12 @@ const Dashboard = () => {
         const usersSnapshot = await getDocs(usersQuery);
         const totalMembers = usersSnapshot.size;
 
-        const activitiesQuery = query(
-          collection(db, 'activities'),
-          orderBy('timestamp', 'desc'),
-          limit(5)
-        );
-        const activitiesSnapshot = await getDocs(activitiesQuery);
-        const activities = activitiesSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-
         setStats({
           totalMembers,
           activeMembers: Math.max(0, totalMembers - 2),
           pendingTasks: Math.floor(Math.random() * 8) + 3,
           completedTasks: Math.floor(Math.random() * 12) + 8
         });
-        setRecentActivities(activities);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -191,6 +319,7 @@ const Dashboard = () => {
   const renderHome = () => (
     <div className="space-y-8">
       <div className="grid grid-cols-1 xl:grid-cols-[320px,1fr] gap-6">
+        {/* Left: profile card */}
         <div className="bg-white rounded-3xl shadow-sm p-8 flex flex-col items-center text-center space-y-6">
           <div className="relative flex flex-col items-center">
             <div className="relative -mt-16 group">
@@ -219,31 +348,44 @@ const Dashboard = () => {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl font-semibold">Hello, {currentUser.displayName || 'Someone'}!</h2>
+            <h2 className="text-2xl font-semibold">
+              Hello, {currentUser.displayName || 'Someone'}!
+            </h2>
             <p className="text-sm text-gray-500 uppercase tracking-[0.4em]">
               ORGANIZATIONAL PROFILING SYSTEM
             </p>
           </div>
+
           <div className="w-full pt-6 border-t border-gray-100 space-y-3">
             <div className="flex items-center justify-between text-sm text-gray-500">
               <span>Role</span>
               <span className="inline-flex items-center space-x-2 rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-500">
                 <Award className="h-4 w-4" />
-                <span>{userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'Member'}</span>
+                <span>
+                  {userRole
+                    ? userRole.charAt(0).toUpperCase() + userRole.slice(1)
+                    : 'Member'}
+                </span>
               </span>
             </div>
             <div className="flex items-center justify-between text-sm text-gray-500">
               <span>Events this month</span>
-              <span className="font-semibold text-gray-900">{stats.pendingTasks}</span>
+              <span className="font-semibold text-gray-900">
+                {stats.pendingTasks}
+              </span>
             </div>
             <div className="flex items-center justify-between text-sm text-gray-500">
               <span>Completed tasks</span>
-              <span className="font-semibold text-gray-900">{stats.completedTasks}</span>
+              <span className="font-semibold text-gray-900">
+                {stats.completedTasks}
+              </span>
             </div>
           </div>
         </div>
+
+        {/* Right: welcome text + static image */}
         <div className="bg-white rounded-3xl shadow-sm p-10">
-          <h1 className="text-4xl font-bold mb-6">Welcome</h1>
+          <h1 className="text-4xl font-bold mb-6 underline">Welcome</h1>
           <p className="text-gray-600 leading-relaxed mb-6">
             he Student Organization is a dynamic community of passionate and dedicated young leaders who
             strive to create positive change within the campus. With a strong commitment to service,
@@ -265,6 +407,17 @@ const Dashboard = () => {
             others.
           </p>
 
+          {/* Static home image */}
+          <div className="mt-8">
+            <div className="w-full overflow-hidden rounded-3xl border border-gray-100">
+              <img
+                src="/images/xc.jpg"
+                alt="Organization group"
+                className="w-full max-h-[360px] object-cover"
+              />
+            </div>
+          </div>
+
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="rounded-2xl border border-gray-100 p-6 bg-gray-50">
               <div className="flex items-center space-x-4">
@@ -284,71 +437,12 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Upcoming Events</p>
-                  <p className="text-2xl font-semibold">{Math.max(2, stats.pendingTasks - 1)}</p>
+                  <p className="text-2xl font-semibold">
+                    {Math.max(2, stats.pendingTasks - 1)}
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-3xl bg-white shadow-sm p-8">
-          <h3 className="text-xl font-semibold mb-4">Quick Updates</h3>
-          <div className="space-y-4">
-            {recentActivities.length > 0 ? (
-              recentActivities.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start space-x-4 rounded-2xl bg-gray-50 p-4"
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-100">
-                    <Info className="h-5 w-5 text-red-500" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      {activity.title || 'New activity'}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {activity.description || 'Activity updated for the organization.'}
-                    </p>
-                    <p className="mt-2 text-xs uppercase tracking-widest text-gray-400">
-                      {activity.timestamp
-                        ? new Date(activity.timestamp.toDate()).toLocaleDateString()
-                        : 'Recently'}
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-gray-200 p-12 text-center text-gray-500">
-                <AlertCircle className="h-8 w-8 mb-4 text-gray-400" />
-                No recent activities
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="rounded-3xl bg-white shadow-sm p-8">
-          <h3 className="text-xl font-semibold mb-4">Member Highlights</h3>
-          <div className="space-y-5">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between rounded-2xl border border-gray-100 p-4"
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 rounded-full bg-gray-200" />
-                  <div>
-                    <p className="font-semibold text-gray-800">Member {index + 1}</p>
-                    <p className="text-sm text-gray-500">Role designation</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-500">
-                  <Star className="h-4 w-4 text-amber-400" />
-                  Top performer
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
@@ -368,7 +462,11 @@ const Dashboard = () => {
             className="rounded-3xl bg-white shadow-sm p-6 space-y-4 flex flex-col min-h-[360px] max-h-[360px]"
           >
             <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200">
-              <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
+              <img
+                src={member.photo}
+                alt={member.name}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <p className="font-semibold text-gray-9">{member.name}</p>
@@ -384,20 +482,63 @@ const Dashboard = () => {
     </div>
   );
 
-  const renderServices = () => (
-    <div className="rounded-3xl bg-white shadow-sm p-10 min-h-[520px]">
-      <h1 className="text-4xl font-bold mb-4">Services</h1>
-      <p className="text-gray-500">Showcase the programs and services offered by the organization.</p>
-    </div>
-  );
+  /* SERVICES: 6 boxes, SAME UI, but using serviceMembers (separate & editable) */
+  const renderServices = () => {
+    const cardsToShow = serviceMembers.slice(0, 6); // 6 shapes
+
+    return (
+      <div className="rounded-3xl bg-white shadow-sm p-10 min-h-[520px] flex flex-col">
+        <div>
+          <h1 className="text-4xl font-bold mb-4">Services</h1>
+          <p className="text-gray-500">
+            Officers and roles that help provide services and support within the organization.
+          </p>
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {cardsToShow.map((member) => (
+            <div
+              key={member.name}
+              className="rounded-3xl bg-gray-50 border border-gray-100 p-6 flex flex-col min-h-[260px]"
+            >
+              {/* photo + name + role */}
+              <div className="flex items-start space-x-4 mb-4">
+                <div className="h-12 w-12 rounded-full overflow-hidden bg-gray-200">
+                  <img
+                    src={member.photo}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {member.name}
+                  </h3>
+                  <p className="text-sm text-gray-500">{member.role}</p>
+                </div>
+              </div>
+
+              {/* description */}
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {member.bio1}
+              </p>
+              <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                {member.bio2}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   const renderReports = () => (
     <div className="space-y-6">
       <div className="rounded-3xl bg-white shadow-sm p-10 min-h-[200px]">
         <h1 className="text-4xl font-bold mb-4">Reports</h1>
         <p className="text-gray-500 max-w-2xl">
-          Keep track of organizational performance, progress updates, and data insights aligned with
-          your objectives.
+          Keep track of organizational performance, progress updates, and data
+          insights aligned with your objectives.
         </p>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -407,8 +548,8 @@ const Dashboard = () => {
             <TrendingUp className="h-5 w-5 text-red-400" />
           </h3>
           <p className="text-sm text-gray-500 leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id metus ac elit convallis
-            tempus. Curabitur malesuada purus ex.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus id
+            metus ac elit convallis tempus. Curabitur malesuada purus ex.
           </p>
         </div>
         <div className="rounded-3xl bg-white shadow-sm p-10 min-h-[260px] border border-gray-100">
@@ -417,8 +558,8 @@ const Dashboard = () => {
             <Users className="h-5 w-5 text-emerald-400" />
           </h3>
           <p className="text-sm text-gray-500 leading-relaxed">
-            Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis
-            egestas. Suspendisse potenti.
+            Pellentesque habitant morbi tristique senectus et netus et malesuada
+            fames ac turpis egestas. Suspendisse potenti.
           </p>
         </div>
       </div>
@@ -442,31 +583,24 @@ const Dashboard = () => {
                 key={contact.name}
                 className="group flex items-center rounded-2xl px-5 py-4 transition bg-gray-50 text-gray-700 hover:bg-[#f04b4b] hover:text-white hover:shadow-lg"
               >
-                {/* LEFT: icon + name/title (takes leftover width, neat alignment) */}
                 <div className="flex items-center space-x-3 flex-1 min-w-0">
                   <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center group-hover:bg-white/20">
                     <Users className="h-5 w-5 text-gray-400 group-hover:text-white" />
                   </div>
                   <div className="flex flex-col">
-                    <p className="font-semibold leading-tight">
-                      {contact.name}
-                    </p>
+                    <p className="font-semibold leading-tight">{contact.name}</p>
                     <p className="text-sm text-gray-500 group-hover:text-white/70">
                       {contact.title}
                     </p>
                   </div>
                 </div>
 
-                {/* RIGHT: action icons – aligned and only visible on hover */}
                 <div className="hidden group-hover:flex items-center space-x-4 text-sm ml-4">
                   <button className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-white/30 hover:bg_white/50 transition">
                     <Phone className="h-4 w-4" />
                   </button>
                   <button className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 transition">
                     <Mail className="h-4 w-4" />
-                  </button>
-                  <button className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 transition">
-                    <Star className="h-4 w-4" />
                   </button>
                   <button className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 transition">
                     <Settings className="h-4 w-4" />
@@ -505,8 +639,14 @@ const Dashboard = () => {
             )}
           </div>
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900">John Paul</h2>
-            <p className="text-sm text-gray-500">President</p>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              {currentUser.displayName || 'Someone'}
+            </h2>
+            <p className="text-sm text-gray-500">
+              {userRole
+                ? userRole.charAt(0).toUpperCase() + userRole.slice(1)
+                : 'Member'}
+            </p>
           </div>
         </div>
 
@@ -517,7 +657,7 @@ const Dashboard = () => {
           </div>
           <div className="flex items-start space-x-3">
             <Mail className="h-4 w-4 text-gray-400 mt-1" />
-            <span>john.paul@studentorg.com</span>
+            <span>{currentUser.email || 'john.paul@studentorg.com'}</span>
           </div>
           <div className="flex items-start space-x-3">
             <MapPin className="h-4 w-4 text-gray-400 mt-1" />
@@ -578,8 +718,12 @@ const Dashboard = () => {
                   SO
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.4em] text-gray-400">Student</p>
-                  <p className="text-lg font-semibold text-gray-900">Organization</p>
+                  <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
+                    Student
+                  </p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    Organization
+                  </p>
                 </div>
               </div>
               <div className="relative">
@@ -599,53 +743,21 @@ const Dashboard = () => {
                     key={item.id}
                     onClick={() => setSelectedSection(item.id)}
                     className={`w-full flex items-center space-x-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition
-                      ${active ? 'bg-[#f04b4b] text-white shadow-lg' : 'text-gray-600 hover:bg-gray-100'}`}
+                      ${
+                        active
+                          ? 'bg-[#f04b4b] text-white shadow-lg'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
                   >
-                    <item.icon className={`h-5 w-5 ${active ? 'text-white' : 'text-gray-400'}`} />
+                    <item.icon
+                      className={`h-5 w-5 ${
+                        active ? 'text-white' : 'text-gray-400'
+                      }`}
+                    />
                     <span>{item.label}</span>
                   </button>
                 );
               })}
-
-              <div className="mt-6 space-y-2">
-                <button
-                  onClick={() => setCustomersOpen((prev) => !prev)}
-                  className="w-full flex items-center justify-between rounded-2xl px-4 py-3 text-left text-sm font-semibold text-gray-600 hover:bg-gray-100"
-                >
-                  <span className="inline-flex items-center space-x-3">
-                    <Users className="h-5 w-5 text-amber-500" />
-                    <span>Customers</span>
-                  </span>
-                  {customersOpen ? (
-                    <ChevronDown className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
-                {customersOpen && (
-                  <div className="pl-4 space-y-2">
-                    {customerMenu.map((item) => {
-                      const active = selectedSection === item.id;
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() =>
-                            setSelectedSection(item.id === 'services' ? 'services' : selectedSection)
-                          }
-                          className={`w-full rounded-2xl px-4 py-2 text-left text-sm transition
-                            ${
-                              active
-                                ? 'bg-[#fceeea] text-[#e74242]'
-                                : 'text-gray-500 hover:bg-gray-100'
-                            }`}
-                        >
-                          {item.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
             </nav>
 
             <div className="space-y-4">
@@ -665,7 +777,9 @@ const Dashboard = () => {
                   </p>
                   <span className="inline-flex items-center space-x-2 rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-600">
                     <span>
-                      {userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'Member'}
+                      {userRole
+                        ? userRole.charAt(0).toUpperCase() + userRole.slice(1)
+                        : 'Member'}
                     </span>
                   </span>
                 </div>
